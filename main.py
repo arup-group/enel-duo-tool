@@ -25,22 +25,6 @@ lon = st.text_input("Longitude: ")
 lat = st.text_input("Latitude: ")
 # -91.6, 42 (Linn, Iowa)
 
-def test():
-    # test printing df
-    cols = ["state", "county", "lon", "lat"]
-    vals_test = [state, county, lon, lat]
-
-    df_test = pd.DataFrame(index=cols)
-    df_test["Values"] = vals_test
-
-    st.write('''
-    ## Test df
-    ''')
-    st.write(df_test)
-
-if st.button("Simple Test"):
-    test()
-
 # set variables for testing
 # lon = -91.6
 # lat = 42
@@ -113,7 +97,6 @@ class Analysis:
         self.ras["Values"] = vals_d
 
         st.write("Raster layers complete!")
-        st.write(self.ras)
 
     def county(self):
         st.write("Analyzing county layers...")
@@ -151,29 +134,27 @@ class Analysis:
             count+=1
 
         self.county["Values"] = vals
-        self.county = self.county.apply(lambda x: '%.4f' % x, axis=1) # lambda fxn to remove sci notation
+        self.county["Values"] = self.county["Values"].apply(lambda x: '%.4f' % x) # lambda fxn to remove sci notation
         
-        st.write("County layers complete!") 
-        st.write(self.ras)
+        st.write("County layers complete!")
 
     def total(self):
         # join dfs
         self.final_vals = pd.concat([self.ras,self.county])
-        self.final_vals = self.final_vals.apply(lambda x: '%.4f' % x, axis=1)
 
         st.write('''
         ## Final Values:
         ''')
         st.write(self.final_vals)
     
-    def rec():
+    def rec(self):
         # function to give recommendation...
         st.write('''
         ## Final Recommendation
         Recommendation......
         ''')
 
-    def delete():
+    def delete(self):
         # delete all created features (so can run tool again)
         arcpy.management.Delete("xytable")
         arcpy.management.Delete("point_input")
