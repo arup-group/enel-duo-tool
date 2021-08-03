@@ -2,6 +2,7 @@
 import pandas as pd
 import arcpy
 from arcpy.sa import *
+from streamlit.elements.map import _DEFAULT_COLOR
 arcpy.CheckOutExtension("Spatial")
 import streamlit as st
 
@@ -21,15 +22,19 @@ st.markdown('''
 # add some error handling
 state = st.text_input("State: ")
 county = st.text_input("County: ")
-lon = st.text_input("Longitude: ")
+st.write('''
+Get lon, lat coordinates from an address [here](https://www.latlong.net/)
+''')
 lat = st.text_input("Latitude: ")
-# -91.6, 42 (Linn, Iowa)
+lon = st.text_input("Longitude: ")
 
 # set variables for testing
-# lon = -91.6
-# lat = 42
-# state = 'Iowa'
-# county = 'Linn'
+# lon = -75.57281
+# lat = 39.147316
+# state = 'Delaware'
+# county = 'Kent'
+
+
 
 class Analysis:
     def ras(self):
@@ -50,8 +55,7 @@ class Analysis:
         # raster layers and outputs
         ras_list = ["Slope in Degrees.tif", 
                     "PV Output.tif", 
-                    "Richness of Imperiled Spe.tif", 
-                    "Species Richness.tif", #freshwater
+                    "Richness of Imperiled Spe.tif",
                     "WorldClim Global Mean Pre.tif",
                     "USA Cropland.tif",
                     "USA NLCD Land Cover.tif",
@@ -60,7 +64,6 @@ class Analysis:
         outputs = ["slope_percent",
                     "PV_kWh_per_kWp",
                     "imperiled_species_richness",
-                    "imperiled_fwater_richness",
                     "precipitation_mm",
                     "primary_crop",
                     "land_cover",
@@ -69,21 +72,29 @@ class Analysis:
         #get raster values
         count = 0
         for i in ras_list:
-            ExtractValuesToPoints("point_input", i, f"{outputs[count]}", "INTERPOLATE")
+            ExtractValuesToPoints("point_input", i, f"{outputs[count]}")
             count+=1
 
         # create df
         cols = ["slope_percent.shp",
                 "PV_kWh_per_kWp.shp",
                 "imperiled_species_richness.shp",
-                "imperiled_fwater_richness.shp",
                 "precipitation_mm.shp",
                 "primary_crop.shp",
                 "land_cover.shp",
                 "crop_productivity.shp"]
+        
+        df_col_names = ["Terrain Slope (%)",
+                        "PV Output (kWh/kWp)",
+                        "Richness of Imperiled Species",
+                        "Annual Average Precipitation (mm)",
+                        "Primary Crop Produced",
+                        "Land Use Type",
+                        "USA National Commodity Crop Productivity Index"
+                        ]
 
         vals = []
-        self.ras = pd.DataFrame(index=outputs)
+        self.ras = pd.DataFrame(index=df_col_names)
 
         tot_rows = 0
         for item in cols:
@@ -93,8 +104,16 @@ class Analysis:
                 val = row.getValue("RASTERVALU")
                 vals.append(val)
 
-        vals_d = vals[0:tot_rows:int(tot_rows/len(cols))]
-        self.ras["Values"] = vals_d
+        # vals_d = vals[0:tot_rows:int(tot_rows/len(cols))]
+        self.ras["Values"] = vals
+
+        # replace numeric values with non-numeric where needed (crop type, land use)
+        # crop type:
+        crop_types = pd.read_csv("crop_vals.csv")
+        self.ras["Values"]["Primary Crop Produced"] = crop_types["Crop"][self.ras["Values"]["Primary Crop Produced"]]
+        # land type:
+        land_types = pd.read_csv("land_use_types.csv")
+        self.ras["Values"]["Land Use Type"] = land_types.loc[land_types["RasterValue"]==self.ras["Values"]["Land Use Type"], "Type"].iloc[0]
 
         st.write("Raster layers complete!")
 
@@ -112,6 +131,10 @@ class Analysis:
         outputs = ["crops_sales",
                     "cattle_production",
                     "NRI_score"]
+        
+        df_col_names = ["USDA Crop Sales",
+                        "USDA Cattle Production",
+                        "National Risk Index (NRI) Score"]
 
         # get values
         count = 0
@@ -123,7 +146,7 @@ class Analysis:
 
         # add county vals to df
         vals = []
-        self.county = pd.DataFrame(index=outputs)
+        self.county = pd.DataFrame(index=df_col_names)
 
         count = 0
         for item in outputs:
