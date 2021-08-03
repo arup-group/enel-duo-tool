@@ -19,16 +19,16 @@ st.markdown('''
 
 # ask user for input
 # add some error handling
-state_t = st.text_input("State: ")
-county_t = st.text_input("County: ")
-lon_t = st.text_input("Longitude: ")
-lat_t = st.text_input("Latitude: ")
+state = st.text_input("State: ")
+county = st.text_input("County: ")
+lon = st.text_input("Longitude: ")
+lat = st.text_input("Latitude: ")
 # -91.6, 42 (Linn, Iowa)
 
 def test():
     # test printing df
     cols = ["state", "county", "lon", "lat"]
-    vals_test = [state_t, county_t, lon_t, lat_t]
+    vals_test = [state, county, lon, lat]
 
     df_test = pd.DataFrame(index=cols)
     df_test["Values"] = vals_test
@@ -38,17 +38,18 @@ def test():
     ''')
     st.write(df_test)
 
-if st.button("Simple Test!"):
+if st.button("Simple Test"):
     test()
 
 # set variables for testing
-lon = -91.6
-lat = 42
-state = 'Iowa'
-county = 'Linn'
+# lon = -91.6
+# lat = 42
+# state = 'Iowa'
+# county = 'Linn'
 
 class Analysis:
     def ras(self):
+        st.write("Analyzing raster layers...")
         # create point geometry for lon,lat input
         # try and find better way to do this...
         out_path = r"C:\Users\alden.summerville\OneDrive - Arup\AgroPV Tool\GIS\AgroPV"
@@ -111,12 +112,11 @@ class Analysis:
         vals_d = vals[0:tot_rows:int(tot_rows/len(cols))]
         self.ras["Values"] = vals_d
 
-        st.write('''
-        ## Raster Values
-        ''')
+        st.write("Raster layers complete!")
         st.write(self.ras)
 
     def county(self):
+        st.write("Analyzing county layers...")
         # county layers and outputs
         county_list = ["AgroPV.gdb/USDA_Census_of_Agriculture_2017___Sales_and_Equipment",
                         "AgroPV.gdb/USDA_Census_of_Agriculture_2017___Cattle_Production", 
@@ -151,24 +151,27 @@ class Analysis:
             count+=1
 
         self.county["Values"] = vals
-
-        st.write('''
-        ## County Values
-        ''')
-        st.write(self.county.apply(lambda x: '%.4f' % x, axis=1)) # lambda fxn to remove sci notation
+        self.county = self.county.apply(lambda x: '%.4f' % x, axis=1) # lambda fxn to remove sci notation
+        
+        st.write("County layers complete!") 
+        st.write(self.ras)
 
     def total(self):
         # join dfs
-        final_vals = pd.concat([self.ras,self.county]).apply(lambda x: '%.4f' % x, axis=1)
+        self.final_vals = pd.concat([self.ras,self.county])
+        self.final_vals = self.final_vals.apply(lambda x: '%.4f' % x, axis=1)
 
         st.write('''
-        ## Total Values
+        ## Final Values:
         ''')
-        st.write(final_vals)
+        st.write(self.final_vals)
     
     def rec():
         # function to give recommendation...
-        pass
+        st.write('''
+        ## Final Recommendation
+        Recommendation......
+        ''')
 
     def delete():
         # delete all created features (so can run tool again)
@@ -185,6 +188,9 @@ class Analysis:
         arcpy.management.Delete("crops_sales")
         arcpy.management.Delete("cattle_production")
         arcpy.management.Delete("NRI_score")
+
+        st.write("Goodbye!")
+        
      
 
 # instantiate class
