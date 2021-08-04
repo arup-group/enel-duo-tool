@@ -1,11 +1,7 @@
-# import modules and get license
 import arcpy
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
 import analysis
-from SessionState import get # for login
-import os
-
 
 def main():
     # set env
@@ -40,31 +36,21 @@ def main():
     ''')
 
 
-    # instantiate class
+    # instantiate analysis class
     a = analysis.Analysis()
 
+    # call input fxn
     a.input()
 
     # analyze button
     if st.button("Analyze!"):
-        a.ras()
-        a.county_analysis()
-        a.total()
-        a.rec()
-        a.delete()
-
-# login:
-
-session_state = get(password='')
-
-if session_state.password != os.getenv("enelpassword"):
-    pwd_placeholder = st.sidebar.empty()
-    pwd = pwd_placeholder.text_input("Password:", value="", type="password")
-    session_state.password = pwd
-    if session_state.password == os.getenv("enelpassword"):
-        pwd_placeholder.empty()
-        main()
-    elif session_state.password != '':
-        st.error("the password you entered is incorrect")
-else:
-    main()
+        try:
+            a.ras()
+            a.county_analysis()
+            a.total()
+            a.rec()
+            a.delete()
+        except:
+            # actually go in and do "except <specific error>" to be more helpful i.e. invalid state, county ...
+            st.warning("Invalid inputs! Please try again")
+            a.delete()

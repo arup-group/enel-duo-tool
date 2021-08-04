@@ -6,6 +6,7 @@ import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
 
 class Analysis:
+
     def input(self):
         # ask user for input
         # add some error handling
@@ -17,7 +18,7 @@ class Analysis:
         self.lat = st.text_input("Latitude: ")
         self.lon = st.text_input("Longitude: ")
 
-        # set variables for testing
+        # variables for testing
         # lon = -75.57281
         # lat = 39.147316
         # state = 'Delaware'
@@ -96,10 +97,10 @@ class Analysis:
         # fix values:
         # replace numeric values with non-numeric where needed (crop type, land use)
         # crop type:
-        crop_types = pd.read_csv("crop_vals.csv")
+        crop_types = pd.read_csv("data/crop_vals.csv")
         self.ras["Values"]["Primary Crop Produced"] = crop_types["Crop"][self.ras["Values"]["Primary Crop Produced"]]
         # land type:
-        land_types = pd.read_csv("land_use_types.csv")
+        land_types = pd.read_csv("data/land_use_types.csv")
         self.ras["Values"]["Land Use Type"] = land_types.loc[land_types["RasterValue"]==self.ras["Values"]["Land Use Type"], "Type"].iloc[0]
         # divide crop index by 1000
         self.ras["Values"]["USA National Commodity Crop Productivity Index"] = self.ras["Values"]["USA National Commodity Crop Productivity Index"]/1000
