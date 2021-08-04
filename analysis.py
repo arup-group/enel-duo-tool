@@ -5,8 +5,23 @@ arcpy.CheckOutExtension("Spatial")
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
 
-
 class Analysis:
+    def input(self):
+        # ask user for input
+        # add some error handling
+        self.state = st.text_input("State: ")
+        self.county = st.text_input("County: ")
+        st.write('''
+        Get lon, lat coordinates from an address [here](https://www.latlong.net/)
+        ''')
+        self.lat = st.text_input("Latitude: ")
+        self.lon = st.text_input("Longitude: ")
+
+        # set variables for testing
+        # lon = -75.57281
+        # lat = 39.147316
+        # state = 'Delaware'
+        # county = 'Kent'
 
     def ras(self):
         st.write("Analyzing raster layers...")
@@ -20,7 +35,7 @@ class Analysis:
         arcpy.management.DeleteField(out_name, "FIELD1")
         arcpy.management.DeleteField(out_name, "OBJECTID")
         with arcpy.da.InsertCursor(out_name,["lon", "lat"]) as cursor:     
-            cursor.insertRow((lon, lat))
+            cursor.insertRow((self.lon, self.lat))
         arcpy.MakeXYEventLayer_management(out_name, "lon", "lat", "point_input")
 
         # raster layers and outputs
@@ -91,7 +106,7 @@ class Analysis:
 
         st.write("Raster layers complete!")
 
-    def county(self):
+    def county_analysis(self):
         st.write("Analyzing county layers...")
         # county layers and outputs
         county_list = ["AgroPV.gdb/Average_Number_of_Sheep_and_Lambs_per_100_Acres_of_All_Land_in_Farms___2012",
@@ -118,13 +133,13 @@ class Analysis:
         count = 0
         for i in county_list:
             r = i.replace("AgroPV.gdb/", "")
-            where_clause = f"{r}.state_name = '{state}' and {r}.county_name = '{county}'"
+            where_clause = f"{r}.state_name = '{self.state}' and {r}.county_name = '{self.county}'"
             arcpy.management.MakeQueryTable(i, outputs[count], "USE_KEY_FIELDS", "{r}.OBJECTID", county_cols[count], where_clause)
             count+=1
 
         # add county vals to df
         vals = []
-        self.county = pd.DataFrame(index=df_col_names)
+        self.countydf = pd.DataFrame(index=df_col_names)
 
         count = 0
         for item in outputs:
@@ -134,14 +149,14 @@ class Analysis:
                 vals.append(val)
             count+=1
 
-        self.county["Values"] = vals
-        self.county["Values"] = self.county["Values"].apply(lambda x: '%.4f' % x) # lambda fxn to remove sci notation
+        self.countydf["Values"] = vals
+        self.countydf["Values"] = self.countydf["Values"].apply(lambda x: '%.4f' % x) # lambda fxn to remove sci notation
         
         st.write("County layers complete!")
 
     def total(self):
         # join dfs
-        self.final_vals = pd.concat([self.ras,self.county])
+        self.final_vals = pd.concat([self.ras,self.countydf])
 
         st.write('''
         ## Final Values:

@@ -1,5 +1,4 @@
 # import modules and get license
-import pandas as pd
 import arcpy
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
@@ -40,30 +39,16 @@ def main():
 
     ''')
 
-    # ask user for input
-    # add some error handling
-    state = st.text_input("State: ")
-    county = st.text_input("County: ")
-    st.write('''
-    Get lon, lat coordinates from an address [here](https://www.latlong.net/)
-    ''')
-    lat = st.text_input("Latitude: ")
-    lon = st.text_input("Longitude: ")
-
-    # set variables for testing
-    # lon = -75.57281
-    # lat = 39.147316
-    # state = 'Delaware'
-    # county = 'Kent'
-
 
     # instantiate class
     a = analysis.Analysis()
 
+    a.input()
+
     # analyze button
     if st.button("Analyze!"):
         a.ras()
-        a.county()
+        a.county_analysis()
         a.total()
         a.rec()
         a.delete()
