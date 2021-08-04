@@ -18,6 +18,25 @@ st.markdown('''
 ## Welcome! Enter ....instructions and background
 ''')
 
+# sidebar
+st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Enel_Group_logo.svg/1200px-Enel_Group_logo.svg.png", width=130)
+st.sidebar.write('''
+## Welcome to the Enel Dual Land Use (DUO) AgroPV tool developed by Arup....
+
+# Intro
+
+...
+
+# Layers background
+
+...
+
+# Etc
+
+...
+
+''')
+
 # ask user for input
 # add some error handling
 state = st.text_input("State: ")
@@ -120,19 +139,23 @@ class Analysis:
     def county(self):
         st.write("Analyzing county layers...")
         # county layers and outputs
-        county_list = ["AgroPV.gdb/USDA_Census_of_Agriculture_2017___Sales_and_Equipment",
+        county_list = ["AgroPV.gdb/Average_Number_of_Sheep_and_Lambs_per_100_Acres_of_All_Land_in_Farms___2012",
+                        "AgroPV.gdb/USDA_Census_of_Agriculture_2017___Sales_and_Equipment",
                         "AgroPV.gdb/USDA_Census_of_Agriculture_2017___Cattle_Production", 
                         "AgroPV.gdb/National_Risk_Index_Counties__October_2020_"]
 
-        county_cols = ["USDA_Census_of_Agriculture_2017___Sales_and_Equipment.CROP_SALES_IN_DOLLARS",
+        county_cols = ["Average_Number_of_Sheep_and_Lambs_per_100_Acres_of_All_Land_in_Farms___2012.y12_M292_valueText", 
+                        "USDA_Census_of_Agriculture_2017___Sales_and_Equipment.CROP_SALES_IN_DOLLARS",
                         "USDA_Census_of_Agriculture_2017___Cattle_Production.CATTLE_INCL_CALVES_OPERATIONS_W",
                         "National_Risk_Index_Counties__October_2020_.risk_score"]
 
-        outputs = ["crops_sales",
+        outputs = ["sheep_lamb_avg",
+                    "crops_sales",
                     "cattle_production",
                     "NRI_score"]
         
-        df_col_names = ["USDA Crop Sales",
+        df_col_names = ["Average # of Sheep and Lambs per 100 Acres",
+                        "USDA Crop Sales",
                         "USDA Cattle Production",
                         "National Risk Index (NRI) Score"]
 
@@ -189,6 +212,7 @@ class Analysis:
         arcpy.management.Delete("primary_crop.shp")
         arcpy.management.Delete("land_cover.shp")
         arcpy.management.Delete("crop_productivity.shp")
+        arcpy.management.Delete("sheep_lamb_avg")
         arcpy.management.Delete("crops_sales")
         arcpy.management.Delete("cattle_production")
         arcpy.management.Delete("NRI_score")
