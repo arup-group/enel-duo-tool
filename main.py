@@ -2,12 +2,12 @@
 import pandas as pd
 import arcpy
 from arcpy.sa import *
-from streamlit.elements.map import _DEFAULT_COLOR
 arcpy.CheckOutExtension("Spatial")
 import streamlit as st
+from streamlit.elements.map import _DEFAULT_COLOR
 
 # set env
-# path/workspace might be an issue for production ?
+# path/workspace might be an issue for production 
 arcpy.env.workspace = r"C:\Users\alden.summerville\OneDrive - Arup\AgroPV Tool\GIS\AgroPV"
 
 # app header/title
@@ -126,6 +126,7 @@ class Analysis:
         # vals_d = vals[0:tot_rows:int(tot_rows/len(cols))]
         self.ras["Values"] = vals
 
+        # fix values:
         # replace numeric values with non-numeric where needed (crop type, land use)
         # crop type:
         crop_types = pd.read_csv("crop_vals.csv")
@@ -133,6 +134,8 @@ class Analysis:
         # land type:
         land_types = pd.read_csv("land_use_types.csv")
         self.ras["Values"]["Land Use Type"] = land_types.loc[land_types["RasterValue"]==self.ras["Values"]["Land Use Type"], "Type"].iloc[0]
+        # divide crop index by 1000
+        self.ras["Values"]["USA National Commodity Crop Productivity Index"] = self.ras["Values"]["USA National Commodity Crop Productivity Index"]/1000
 
         st.write("Raster layers complete!")
 
@@ -156,7 +159,7 @@ class Analysis:
         
         df_col_names = ["Average # of Sheep and Lambs per 100 Acres",
                         "USDA Crop Sales",
-                        "USDA Cattle Production",
+                        "USDA Cattle Production (# operations with sales)",
                         "National Risk Index (NRI) Score"]
 
         # get values
@@ -175,7 +178,7 @@ class Analysis:
         for item in outputs:
             rows = arcpy.SearchCursor(item)
             for row in rows:
-                val = row.getValue(county_cols[count])
+                val = float(row.getValue(county_cols[count]))
                 vals.append(val)
             count+=1
 
