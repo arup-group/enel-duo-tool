@@ -1,3 +1,4 @@
+from arcpy.ia.Functions import FindArgumentStatistics
 import pandas as pd
 import arcpy
 from arcpy.sa import *
@@ -19,8 +20,8 @@ class Analysis:
         self.lon = st.text_input("Longitude: ")
 
         # variables for testing
-        # lon = -75.57281
         # lat = 39.147316
+        # lon = -75.57281
         # state = 'Delaware'
         # county = 'Kent'
 
@@ -168,8 +169,17 @@ class Analysis:
         # function to give recommendation...
         st.write('''
         ## Final Recommendation
-        Recommendation......
         ''')
+    
+    def report(self):
+        # down = st.button("Download report")
+        # if down:
+        #     file = open("reports/Grazers and Pollinators - Detailed", "r")
+        
+        report = f'<a href="reports/Grazers-and-Pollinators-Detailed.pdf" download>Download Report</a>'
+        st.markdown(report, unsafe_allow_html=True)
+
+
 
     def delete(self):
         # delete all created features (so can run tool again)

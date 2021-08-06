@@ -49,6 +49,7 @@ def main():
             a.county_analysis()
             a.total()
             a.rec()
+            a.report()
             a.delete()
         except:
             # actually go in and do "except <specific error>" to be more helpful i.e. invalid state, county ...
