@@ -5,6 +5,7 @@ from arcpy.sa import *
 arcpy.CheckOutExtension("Spatial")
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
+import base64
 
 class Analysis:
 
@@ -168,15 +169,16 @@ class Analysis:
     def rec(self):
         # function to give recommendation...
         st.write('''
-        ## Final Recommendation
+        ## Suggested Dual Use Strategy
         ''')
     
     def report(self):
         # down = st.button("Download report")
         # if down:
         #     file = open("reports/Grazers and Pollinators - Detailed", "r")
-        
-        report = f'<a href="reports/Grazers-and-Pollinators-Detailed.pdf" download>Download Report</a>'
+        file = open("reports/grazers", "r")
+        b64 = base64.b64encode(file.encode()).decode()  # some strings
+        report = f'<a href="data:reports/grazers;base64,{b64}" download="grazers-duo.pdf">Download Report</a>'
         st.markdown(report, unsafe_allow_html=True)
 
 

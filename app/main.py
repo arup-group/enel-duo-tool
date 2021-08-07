@@ -2,6 +2,8 @@ import arcpy
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
 import analysis
+import base64
+import io
 
 def main():
     # set env
@@ -9,17 +11,18 @@ def main():
     arcpy.env.workspace = r"C:\Users\alden.summerville\OneDrive - Arup\AgroPV Tool\GIS\AgroPV"
 
     # app header/title
+    st.image("https://upload.wikimedia.org/wikipedia/commons/3/3a/Arup_Red_RGB.png", width = 100)
     st.write('''
     # Dual Land Use - AgroPV Tool
     ''')
     st.markdown('''
-    ## Welcome! Enter ....instructions and background
+    ## Welcome! Enter a State and County, and the coresponding Lat, Lon coordinates for that location
     ''')
 
     # sidebar
     st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Enel_Group_logo.svg/1200px-Enel_Group_logo.svg.png", width=130)
     st.sidebar.write('''
-    ## Welcome to the Enel Dual Land Use (DUO) AgroPV tool developed by Arup....
+    ## Welcome to the Dual Use Opportunities Tool (DUO), developed in partnership between Enel and Arup
 
     # Intro
 
@@ -49,9 +52,19 @@ def main():
             a.county_analysis()
             a.total()
             a.rec()
-            a.report()
+            # a.report()
             a.delete()
         except:
             # actually go in and do "except <specific error>" to be more helpful i.e. invalid state, county ...
             st.warning("Invalid inputs! Please try again")
             a.delete()
+    
+    def report():
+        # file = open("reports/grazers.pdf", "r")
+        # b64 = base64.b64encode(file.encode()).decode()  # some strings
+        # report = f'<a href="data:reports/grazers;base64,{b64}" download="grazers-duo.pdf">Download Report</a>'
+
+        report = f'<a href="/reports/grazers.pdf" download="grazers-duo.pdf">Download Report</a>'
+        st.markdown(report, unsafe_allow_html=True)
+
+    report()
