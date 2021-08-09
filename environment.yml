@@ -5,7 +5,8 @@ channels:
   - defaults
 dependencies:
   - pandas
-  - streamlit             
+  - streamlit
+  - pip   
   - pip:
     - fpdf                            
     - pywin32-ctypes                            
