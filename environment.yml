@@ -4,7 +4,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - arcpy
+  - arcpy=2.7
   - pandas
   - streamlit=0.81.1=pyhd8ed1ab_0
 prefix: C:\Users\alden.summerville\Anaconda3\envs\testarcpy
