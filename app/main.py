@@ -44,7 +44,7 @@ def main():
     # call input fxn
     a.input()
 
-    # analyze button
+    # analyze and download button
     if st.button("Analyze and Download Report"):
         try:
             a.ras()
