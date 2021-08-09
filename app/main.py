@@ -2,13 +2,12 @@ import arcpy
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
 import analysis
-import base64
-import io
 
 def main():
     # set env
     # path/workspace might be an issue for production 
     arcpy.env.workspace = r"C:\Users\alden.summerville\OneDrive - Arup\AgroPV Tool\GIS\AgroPV"
+    done = []
 
     # app header/title
     st.image("https://upload.wikimedia.org/wikipedia/commons/3/3a/Arup_Red_RGB.png", width = 100)
@@ -46,19 +45,16 @@ def main():
     a.input()
 
     # analyze button
-    if st.button("Analyze!"):
+    if st.button("Analyze and Download Report"):
         try:
             a.ras()
             a.county_analysis()
             a.total()
-            a.rec()
-            # if <logic to choose correct report>:
-            #     report = ...
-            #     a.report(f"{report}")
             a.delete()
+            done = 1
+            if done==1: # add actual logic
+                a.report("Grazers-Pollinators")
         except:
             # actually go in and do "except <specific error>" to be more helpful i.e. invalid state, county ...
             st.warning("Invalid inputs! Please try again")
             a.delete()
-
-    a.report("grazers")
