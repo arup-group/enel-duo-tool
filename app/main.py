@@ -52,19 +52,13 @@ def main():
             a.county_analysis()
             a.total()
             a.rec()
-            # a.report()
+            # if <logic to choose correct report>:
+            #     report = ...
+            #     a.report(f"{report}")
             a.delete()
         except:
             # actually go in and do "except <specific error>" to be more helpful i.e. invalid state, county ...
             st.warning("Invalid inputs! Please try again")
             a.delete()
-    
-    def report():
-        # file = open("reports/grazers.pdf", "r")
-        # b64 = base64.b64encode(file.encode()).decode()  # some strings
-        # report = f'<a href="data:reports/grazers;base64,{b64}" download="grazers-duo.pdf">Download Report</a>'
 
-        report = f'<a href="/reports/grazers.pdf" download="grazers-duo.pdf">Download Report</a>'
-        st.markdown(report, unsafe_allow_html=True)
-
-    report()
+    a.report("grazers")

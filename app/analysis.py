@@ -6,6 +6,8 @@ arcpy.CheckOutExtension("Spatial")
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
 import base64
+import webbrowser
+import os
 
 class Analysis:
 
@@ -171,17 +173,30 @@ class Analysis:
         st.write('''
         ## Suggested Dual Use Strategy
         ''')
+
+
+    # def report(self):
+    #     # file = open("reports/grazers.pdf", "r")
+    #     # b64 = base64.b64encode(file.encode()).decode()  # some strings
+    #     # report = f'<a href="data:reports/grazers;base64,{b64}" download="grazers-duo.pdf">Download Report</a>'
+
+    #     report = f'<a href="/reports/grazers.pdf" download="grazers-duo.pdf">Download Report</a>'
+    #     st.markdown(report, unsafe_allow_html=True)
     
-    def report(self):
-        # down = st.button("Download report")
-        # if down:
-        #     file = open("reports/Grazers and Pollinators - Detailed", "r")
-        file = open("reports/grazers", "r")
-        b64 = base64.b64encode(file.encode()).decode()  # some strings
-        report = f'<a href="data:reports/grazers;base64,{b64}" download="grazers-duo.pdf">Download Report</a>'
-        st.markdown(report, unsafe_allow_html=True)
+    # def create_download_link(self, val, filename):
+    #     b64 = base64.b64encode(val)  # val looks like b'...'
+    #     return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{filename}.pdf">Download Report</a>'
+    
+    # def report(self, filename):
+    #     file = open(f"reports/{filename}.pdf", "r")
+    #     encoded_file = 
+    #     html = self.create_download_link(file, filename)
+    #     st.markdown(html, unsafe_allow_html=True)
 
-
+    def report(self, filename):
+        path = f'C:\\Users\\alden.summerville\\OneDrive - Arup\\AgroPV Tool\\python\\duo_tool\\app\\reports\\{filename}.pdf'
+        if st.button("Download File"):
+            webbrowser.open_new(path)
 
     def delete(self):
         # delete all created features (so can run tool again)
