@@ -29,6 +29,10 @@ def main():
 
     # Layers background
 
+    Cattle Production: Number of cattle operations with sales in 2017, categorized by county. Data from the Census of Agriculture, produced by the USDA National Agricultural Statistics Service
+
+    Sheep and Lamb: Average number of sheep and lambs per 100 acres of all farmland in 2012. Data from the Census of Agriculture, produced by the USDA National Agricultural Statistics Service
+
     ...
 
     # Etc
