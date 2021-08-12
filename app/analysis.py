@@ -52,21 +52,21 @@ class Analysis:
         arcpy.MakeXYEventLayer_management(out_name, "lon", "lat", "point_input")
 
         # raster layers and outputs
-        ras_list = ["Slope in Degrees.tif", 
-                    "PV Output.tif", 
-                    "Richness of Imperiled Spe.tif",
+        ras_list = ["USA Cropland.tif", 
+                    "USA National Commodity Cr.tif", 
                     "WorldClim Global Mean Pre.tif",
-                    "USA Cropland.tif",
+                    "Richness of Imperiled Spe.tif",
                     "USA NLCD Land Cover.tif",
-                    "USA National Commodity Cr.tif"]
+                    "Slope in Degrees.tif",
+                    "PV Output.tif"]
 
-        outputs = ["slope_percent",
-                    "PV_kWh_per_kWp",
-                    "imperiled_species_richness",
+        outputs = ["primary_crop",
+                    "crop_productivity",
                     "precipitation_mm",
-                    "primary_crop",
+                    "imperiled_species_richness",
                     "land_cover",
-                    "crop_productivity"]
+                    "slope_percent",
+                    "PV_kWh_per_kWp"]
 
         #get raster values
         count = 0
@@ -75,25 +75,26 @@ class Analysis:
             count+=1
 
         # create df
-        cols = ["slope_percent.shp",
-                "PV_kWh_per_kWp.shp",
-                "imperiled_species_richness.shp",
+        cols = ["primary_crop.shp",
+                "crop_productivity.shp",
                 "precipitation_mm.shp",
-                "primary_crop.shp",
+                "imperiled_species_richness.shp",
                 "land_cover.shp",
-                "crop_productivity.shp"]
+                "slope_percent.shp",
+                "PV_kWh_per_kWp.shp"
+                ]
         
-        df_col_names = ["Terrain Slope (%)",
-                        "PV Output (kWh/kWp)",
+        self.ras_col_names = ["Crop Type",
+                        "USA National Commodity Crop Productivity Index",
+                        "Rainfall",
                         "Richness of Imperiled Species",
-                        "Annual Average Precipitation (mm)",
-                        "Primary Crop Produced",
                         "Land Use Type",
-                        "USA National Commodity Crop Productivity Index"
+                        "Topography",
+                        "Sunlight - Solar power potential"
                         ]
 
         vals = []
-        self.ras = pd.DataFrame(index=df_col_names)
+        self.rasdf = pd.DataFrame(index=self.ras_col_names)
 
         # iterate, grab values, add to list
         tot_rows = 0
@@ -105,18 +106,18 @@ class Analysis:
                 vals.append(val)
 
         # vals_d = vals[0:tot_rows:int(tot_rows/len(cols))]  #this shouldn't be needed
-        self.ras["Values"] = vals
+        self.rasdf["Values"] = vals
 
         # fix values:
         # replace numeric values with non-numeric where needed (crop type, land use)
         # crop type:
         crop_types = pd.read_csv("data/crop_vals.csv")
-        self.ras["Values"]["Primary Crop Produced"] = crop_types["Crop"][self.ras["Values"]["Primary Crop Produced"]]
+        self.rasdf["Values"]["Crop Type"] = crop_types["Crop"][self.rasdf["Values"]["Crop Type"]]
         # land type:
         land_types = pd.read_csv("data/land_use_types.csv")
-        self.ras["Values"]["Land Use Type"] = land_types.loc[land_types["RasterValue"]==self.ras["Values"]["Land Use Type"], "Type"].iloc[0]
+        self.rasdf["Values"]["Land Use Type"] = land_types.loc[land_types["RasterValue"]==self.rasdf["Values"]["Land Use Type"], "Type"].iloc[0]
         # divide crop index by 1000 -- idk why it's multiplied by 1000 in the first place
-        self.ras["Values"]["USA National Commodity Crop Productivity Index"] = self.ras["Values"]["USA National Commodity Crop Productivity Index"]/1000
+        self.rasdf["Values"]["USA National Commodity Crop Productivity Index"] = self.rasdf["Values"]["USA National Commodity Crop Productivity Index"]/1000
 
         st.write("Raster layers complete!")
 
@@ -125,22 +126,22 @@ class Analysis:
         # county layers and outputs
         county_list = ["AgroPV.gdb/Average_Number_of_Sheep_and_Lambs_per_100_Acres_of_All_Land_in_Farms___2012",
                         "AgroPV.gdb/USDA_Census_of_Agriculture_2017___Sales_and_Equipment",
-                        "AgroPV.gdb/USDA_Census_of_Agriculture_2017___Cattle_Production", 
+                        # "AgroPV.gdb/USDA_Census_of_Agriculture_2017___Cattle_Production", 
                         "AgroPV.gdb/National_Risk_Index_Counties__October_2020_"]
 
         county_cols = ["Average_Number_of_Sheep_and_Lambs_per_100_Acres_of_All_Land_in_Farms___2012.y12_M292_valueText", 
                         "USDA_Census_of_Agriculture_2017___Sales_and_Equipment.CROP_SALES_IN_DOLLARS",
-                        "USDA_Census_of_Agriculture_2017___Cattle_Production.CATTLE_INCL_CALVES_OPERATIONS_W",
+                        # "USDA_Census_of_Agriculture_2017___Cattle_Production.CATTLE_INCL_CALVES_OPERATIONS_W",
                         "National_Risk_Index_Counties__October_2020_.risk_score"]
 
         outputs = ["sheep_lamb_avg",
                     "crops_sales",
-                    "cattle_production",
+                    # "cattle_production",
                     "NRI_score"]
         
-        df_col_names = ["Average # of Sheep and Lambs per 100 Acres",
-                        "USDA Crop Sales",
-                        "USDA Cattle Production (# operations with sales)",
+        self.county_col_names = ["Sheep and Lambs per 100 Acres",
+                        "Crop Sales (USDA)",
+                        # "USDA Cattle Production (# operations with sales)",
                         "National Risk Index (NRI) Score"]
 
         # get values
@@ -153,7 +154,7 @@ class Analysis:
 
         # add county vals to df
         vals = []
-        self.countydf = pd.DataFrame(index=df_col_names)
+        self.countydf = pd.DataFrame(index=self.county_col_names)
 
         count = 0
         for item in outputs:
@@ -170,12 +171,26 @@ class Analysis:
 
     def total(self):
         # join dfs
-        self.final_vals = pd.concat([self.ras,self.countydf])
+        full_cols = self.ras_col_names+self.county_col_names
+        self.final_vals = pd.concat([self.rasdf,self.countydf])
+        # self.final_vals.reset_index(drop=True)
+        self.final_vals.reindex([
+            "Sheep and Lambs per 100 Acres",
+            "Crop Type",
+            "Crop Sales (USDA)",
+            "USA National Commodity Crop Productivity Index",
+            "Rainfall",
+            "Richness of Imperiled Species",
+            "Land Use Type",
+            "National Risk Index (NRI) Score",
+            "Topography",
+            "Sunlight - Solar power potential"
+        ])
 
         st.write('''
         ## Final Values:
         ''')
-        st.write(self.final_vals)
+        st.dataframe(self.final_vals)
 
     def delete(self):
         # delete all created features (so can run tool again)
@@ -198,7 +213,13 @@ class Analysis:
         st.write('''
         ## Suggested Dual Use Strategy
         ''')
+
+        # chart
+        st.image("img/grazers-pollinators-chart.png")
+
+        # download report
         path = f'{os.getcwd()}\\reports\\{filename}.pdf'
         # if st.button("Download Report"):
         st.write("Downloading Report...")
         webbrowser.open_new(path)
+        st.write("Download Complete!")
