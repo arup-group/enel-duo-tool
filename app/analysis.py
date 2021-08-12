@@ -31,6 +31,7 @@ class Analysis:
         st.write("Analyzing raster layers...")
         
         # create point geometry for lon,lat input
+        # again, brutal method
         os.chdir("..")
         os.chdir("..")
         os.chdir("..")
