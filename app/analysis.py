@@ -29,6 +29,7 @@ class Analysis:
 
     def ras(self):
         st.write("Analyzing raster layers...")
+        
         # create point geometry for lon,lat input
         os.chdir("..")
         os.chdir("..")
@@ -69,7 +70,7 @@ class Analysis:
         #get raster values
         count = 0
         for i in ras_list:
-            ExtractValuesToPoints("point_input", i, f"{outputs[count]}")
+            ExtractValuesToPoints("point_input", i, f"{outputs[count]}") # use "interpolate_values" field so we're not just looking at a precise point?
             count+=1
 
         # create df
@@ -93,6 +94,7 @@ class Analysis:
         vals = []
         self.ras = pd.DataFrame(index=df_col_names)
 
+        # iterate, grab values, add to list
         tot_rows = 0
         for item in cols:
             rows = arcpy.SearchCursor(item)
@@ -112,7 +114,7 @@ class Analysis:
         # land type:
         land_types = pd.read_csv("data/land_use_types.csv")
         self.ras["Values"]["Land Use Type"] = land_types.loc[land_types["RasterValue"]==self.ras["Values"]["Land Use Type"], "Type"].iloc[0]
-        # divide crop index by 1000
+        # divide crop index by 1000 -- idk why it's multiplied by 1000 in the first place
         self.ras["Values"]["USA National Commodity Crop Productivity Index"] = self.ras["Values"]["USA National Commodity Crop Productivity Index"]/1000
 
         st.write("Raster layers complete!")

@@ -7,6 +7,7 @@ import os
 def main():
     # set env
     # path/workspace might be an issue for production
+    # also this is a brutal way of changing dirs...
     os.chdir("..")
     os.chdir("..")
     os.chdir("..")
