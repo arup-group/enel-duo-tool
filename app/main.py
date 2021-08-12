@@ -2,11 +2,20 @@ import arcpy
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
 import analysis
+import os
 
 def main():
     # set env
-    # path/workspace might be an issue for production 
-    arcpy.env.workspace = r"C:\Users\alden.summerville\OneDrive - Arup\AgroPV Tool\GIS\AgroPV"
+    # path/workspace might be an issue for production
+    os.chdir("..")
+    os.chdir("..")
+    os.chdir("..")
+    os.chdir("GIS")
+    arcpy.env.workspace = f"{os.getcwd()}\AgroPV"
+    os.chdir("..")
+    os.chdir("Python")
+    os.chdir("duo-tool")
+    os.chdir("app")
     done = []
 
     # app header/title
@@ -29,9 +38,9 @@ def main():
 
     # Layers background
 
-    Cattle Production: Number of cattle operations with sales in 2017, categorized by county. Data from the Census of Agriculture, produced by the USDA National Agricultural Statistics Service
+    **Cattle Production**: Number of cattle operations with sales in 2017, categorized by county. Data from the Census of Agriculture, produced by the USDA National Agricultural Statistics Service
 
-    Sheep and Lamb: Average number of sheep and lambs per 100 acres of all farmland in 2012. Data from the Census of Agriculture, produced by the USDA National Agricultural Statistics Service
+    **Sheep and Lamb**: Average number of sheep and lambs per 100 acres of all farmland in 2012. Data from the Census of Agriculture, produced by the USDA National Agricultural Statistics Service
 
     ...
 

@@ -30,8 +30,15 @@ class Analysis:
     def ras(self):
         st.write("Analyzing raster layers...")
         # create point geometry for lon,lat input
-        # try and find better way to do this...
-        out_path = r"C:\Users\alden.summerville\OneDrive - Arup\AgroPV Tool\GIS\AgroPV"
+        os.chdir("..")
+        os.chdir("..")
+        os.chdir("..")
+        os.chdir("GIS")
+        out_path = f"{os.getcwd()}\AgroPV"
+        os.chdir("..")
+        os.chdir("Python")
+        os.chdir("duo-tool")
+        os.chdir("app")
         out_name = "xytable"
         arcpy.management.CreateTable(out_path, out_name)
         arcpy.management.AddField(out_name, "lon")
@@ -94,7 +101,7 @@ class Analysis:
                 val = row.getValue("RASTERVALU")
                 vals.append(val)
 
-        # vals_d = vals[0:tot_rows:int(tot_rows/len(cols))]
+        # vals_d = vals[0:tot_rows:int(tot_rows/len(cols))]  #this shouldn't be needed
         self.ras["Values"] = vals
 
         # fix values:
@@ -183,8 +190,6 @@ class Analysis:
         arcpy.management.Delete("crops_sales")
         arcpy.management.Delete("cattle_production")
         arcpy.management.Delete("NRI_score")
-
-        st.write("Workspace cleaned")
 
     def report(self, filename):
         st.write('''
