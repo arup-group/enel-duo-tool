@@ -25,7 +25,7 @@ def main():
     # Dual Land Use - AgroPV Tool
     ''')
     st.markdown('''
-    ## Welcome! Enter a State and County, and the coresponding Lat, Lon coordinates for that location
+    ## Welcome! Enter a State and County, and the corresponding Lat, Lon coordinates for that location
     ''')
 
     # sidebar

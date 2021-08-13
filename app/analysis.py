@@ -55,7 +55,9 @@ class Analysis:
         ras_list = ["USA Cropland.tif", 
                     "USA National Commodity Cr.tif", 
                     "WorldClim Global Mean Pre.tif",
-                    "Richness of Imperiled Spe.tif",
+                    "vertebrate-richness.tif",
+                    "pollinators-richness.tif",
+                    "vascular-plants-richness.tif",
                     "USA NLCD Land Cover.tif",
                     "Slope in Degrees.tif",
                     "PV Output.tif"]
@@ -63,7 +65,9 @@ class Analysis:
         outputs = ["primary_crop",
                     "crop_productivity",
                     "precipitation_mm",
-                    "imperiled_species_richness",
+                    "vertebrate_richness",
+                    "pollinators_richness",
+                    "plants_richness",
                     "land_cover",
                     "slope_percent",
                     "PV_kWh_per_kWp"]
@@ -78,7 +82,9 @@ class Analysis:
         cols = ["primary_crop.shp",
                 "crop_productivity.shp",
                 "precipitation_mm.shp",
-                "imperiled_species_richness.shp",
+                "vertebrate_richness.shp",
+                "pollinators_richness.shp",
+                "plants_richness.shp",
                 "land_cover.shp",
                 "slope_percent.shp",
                 "PV_kWh_per_kWp.shp"
@@ -87,7 +93,9 @@ class Analysis:
         self.ras_col_names = ["Crop Type",
                         "USA National Commodity Crop Productivity Index",
                         "Rainfall",
-                        "Richness of Imperiled Species",
+                        "Imperiled Vertebrates - Species Richness",
+                        "Imperiled Pollinators - Species Richness",
+                        "Imperiled Vascular Plants - Species Richness",
                         "Land Use Type",
                         "Topography",
                         "Sunlight - Solar power potential"
@@ -188,7 +196,9 @@ class Analysis:
             "Crop Sales (USDA)",
             "USA National Commodity Crop Productivity Index",
             "Rainfall",
-            "Richness of Imperiled Species",
+            "Imperiled Vertebrates - Species Richness",
+            "Imperiled Pollinators - Species Richness",
+            "Imperiled Vascular Plants - Species Richness",
             "Land Use Type",
             "National Risk Index (NRI) Score",
             "Topography",
@@ -202,7 +212,9 @@ class Analysis:
             "USD",
             "index",
             "mm",
-            "score",
+            "score/11",
+            "score/6",
+            "score/17",
             "type",
             "score",
             "slope %",
@@ -216,20 +228,22 @@ class Analysis:
         st.dataframe(self.final_vals)
 
     def delete(self):
-        # delete all created features (so can run tool again)
+        # delete all created features (so user can run tool again)
         arcpy.management.Delete("xytable")
         arcpy.management.Delete("point_input")
         arcpy.management.Delete("slope_percent.shp")
         arcpy.management.Delete("PV_kWh_per_kWp.shp")
-        arcpy.management.Delete("imperiled_species_richness.shp")
-        arcpy.management.Delete("imperiled_fwater_richness.shp")
+        # arcpy.management.Delete("imperiled_species_richness.shp")
+        arcpy.management.Delete("vertebrate_richness.shp")
+        arcpy.management.Delete("pollinators_richness.shp")
+        arcpy.management.Delete("plants_richness.shp")
         arcpy.management.Delete("precipitation_mm.shp")
         arcpy.management.Delete("primary_crop.shp")
         arcpy.management.Delete("land_cover.shp")
         arcpy.management.Delete("crop_productivity.shp")
         arcpy.management.Delete("sheep_lamb_avg")
         arcpy.management.Delete("crops_sales")
-        arcpy.management.Delete("cattle_production")
+        # arcpy.management.Delete("cattle_production")
         arcpy.management.Delete("NRI_score")
 
     def report(self, filename):
