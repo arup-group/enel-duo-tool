@@ -22,4 +22,4 @@ Open the [duo-tool](https://arup.sharepoint.com/:f:/s/EnelCircularEconomy/Eh_5fs
 
 ## Running the App
 
-To run the web-app with Streamlit, cd to the app directory and run `streamlit run login.py`
+To run the web-app with Streamlit, cd to the app directory (`cd app` in your terminal) and run `streamlit run login.py`
