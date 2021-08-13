@@ -17,6 +17,7 @@ Open the [duo-tool](https://arup.sharepoint.com/:f:/s/EnelCircularEconomy/Eh_5fs
 ### pip
 
 **streamlit**
+
 **pandas**
 
 ## Running the App
