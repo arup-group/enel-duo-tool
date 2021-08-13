@@ -105,6 +105,14 @@ class Analysis:
                 val = row.getValue("RASTERVALU")
                 vals.append(val)
 
+        # count = 0
+        # for val in vals:
+        #     try:
+        #         vals[count] = round(val, 2)
+        #     except:
+        #         pass
+        #     count+=1
+
         # vals_d = vals[0:tot_rows:int(tot_rows/len(cols))]  #this shouldn't be needed
         self.rasdf["Values"] = vals
 
@@ -165,7 +173,7 @@ class Analysis:
             count+=1
 
         self.countydf["Values"] = vals
-        self.countydf["Values"] = self.countydf["Values"].apply(lambda x: '%.4f' % x) # lambda fxn to remove sci notation
+        self.countydf["Values"] = self.countydf["Values"].apply(lambda x: '%.2f' % x) # lambda fxn to remove sci notation
         
         st.write("County layers complete!")
 
@@ -173,8 +181,8 @@ class Analysis:
         # join dfs
         full_cols = self.ras_col_names+self.county_col_names
         self.final_vals = pd.concat([self.rasdf,self.countydf])
-        # self.final_vals.reset_index(drop=True)
-        self.final_vals.reindex([
+        # reorder
+        self.final_vals = self.final_vals.reindex([
             "Sheep and Lambs per 100 Acres",
             "Crop Type",
             "Crop Sales (USDA)",
@@ -186,6 +194,21 @@ class Analysis:
             "Topography",
             "Sunlight - Solar power potential"
         ])
+
+        # add units
+        units = [
+            "count/100 acres",
+            "type",
+            "USD",
+            "index",
+            "mm",
+            "score",
+            "type",
+            "score",
+            "slope %",
+            "kWh/kWp"
+        ]
+        self.final_vals["Unit"] = units
 
         st.write('''
         ## Final Values:
