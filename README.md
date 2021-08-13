@@ -6,7 +6,7 @@ The tool consists of a python script with ArcGIS functionality (arcpy package) i
 
 ## Development
 
-Open the [duo-tool](https://arup.sharepoint.com/sites/EnelCircularEconomy/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FEnelCircularEconomy%2FShared%20Documents%2FGeneral%2FDUO%20development%20summer%202021%2Ftool%2Ddev%2FPython%2Fduo%2Dtool&p=true&originalPath=aHR0cHM6Ly9hcnVwLnNoYXJlcG9pbnQuY29tLzpmOi9zL0VuZWxDaXJjdWxhckVjb25vbXkvRXJORTZ6UDdBR3hDaFpUSzFXY3phT0FCY241aHF4QjJ2T01iSUw2WFdUcG1TZz9ydGltZT1PcVBQbEo1ZTJVZw) Arup One Drive folder in an IDE of your choice. This is necessary as the ArcGIS Pro workspace has to be relative to the project code in order for the code to read from the workspace -- this doesn't mean ArcGIS Pro has to be running for the app to run, the GIS workspace simply needs to exist. Therefore, one cannot simply clone this repo to successfully utilize the app functionality
+Open the [duo-tool](https://arup.sharepoint.com/:f:/s/EnelCircularEconomy/Eh_5fsO6wHZFrAKn5AWlS9MBetDYvZ6wT-cYb1rsncJptA?e=690SLe) Arup One Drive folder in an IDE of your choice. This is necessary as the ArcGIS Pro workspace has to be relative to the project code in order for the code to read from the workspace -- this doesn't mean ArcGIS Pro has to be running for the app to run, the GIS workspace simply needs to exist. Therefore, one cannot simply clone this repo to successfully utilize the app functionality
 
 ## Dependencies
 
