@@ -12,7 +12,7 @@ Open the [duo-tool](https://arup.sharepoint.com/:f:/s/EnelCircularEconomy/Eh_5fs
 
 ### conda
 
-**ArcPy**: The primary python module requirement for this project is the [Arcpy](https://pro.arcgis.com/en/pro-app/latest/arcpy/get-started/installing-arcpy.htm) module from ESRI. Create an Anaconda environment for your development  `conda create <env name>`, then `conda install -c esri arcpy` to install the module. If this fails, you probably don't have ArcGIS Pro on your machine (using a remote workstation is an easy fix). The "Spatial Analyst" toolbox in ArcGIS is necessary for the functionality of the app, so make sure that license is turned on in ArcGIS Pro (Project, Licensing, Configure your Licensing Options, then make sure "Spatial Analyst" is selected)
+**ArcPy**: The primary python module requirement for this project is the [Arcpy](https://pro.arcgis.com/en/pro-app/latest/arcpy/get-started/installing-arcpy.htm) module from ESRI. Create an Anaconda environment for your development  `conda create --name <env name>`, then `conda install -c esri arcpy` to install the module. If this fails, you probably don't have ArcGIS Pro on your machine (using a remote workstation is an easy fix). The "Spatial Analyst" toolbox in ArcGIS is necessary for the functionality of the app, so make sure that license is turned on in ArcGIS Pro (Project, Licensing, Configure your Licensing Options, then make sure "Spatial Analyst" is selected)
 
 ### pip
 
