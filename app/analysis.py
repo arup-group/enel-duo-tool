@@ -1,7 +1,7 @@
-from arcpy.ia.Functions import FindArgumentStatistics
 import pandas as pd
 import arcpy
 from arcpy.sa import *
+from arcpy.ia.Functions import FindArgumentStatistics
 arcpy.CheckOutExtension("Spatial")
 import streamlit as st
 from streamlit.elements.map import _DEFAULT_COLOR
